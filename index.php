@@ -97,7 +97,7 @@ try{
     $i= 0;
 
     foreach($repositories as $repository){
-        
+
         $responses[$i] = [
             "repo" => "Repository name: " . $repository["name"] . "\n",
             "author" => "Author : " . $repository["owner"]["login"] . "\n",
@@ -109,7 +109,7 @@ try{
         $i++;
     }
 
-    echo "The resultas are : \n\n";
+    echo "\nThe resultas are : \n\n";
     
     foreach($responses as $response){
         echo $response["repo"];

@@ -88,28 +88,36 @@ try{
 
     $request_result = $apiConnection->requestRepositories($valid_range , $final_attributes['limit']);
     
+    if(!$request_result){
+        throw new ValidationException("An error occurred while connecting to Github \n");
+    }
+
     $json_response = json_decode($request_result, true);
 
     //Creating the response structure
 
+    if(!(is_array($json_response) && isset($json_response["items"]))){
+        throw new ValidationException("An error occurred, bad response from Github");
+    }
+
     $repositories = $json_response["items"];
     $responses = [];
-    $i= 0;
 
     foreach($repositories as $repository){
 
-        $responses[$i] = [
-            "repo" => "Repository name: " . $repository["name"] . "\n",
-            "author" => "Author : " . $repository["owner"]["login"] . "\n",
-            "stars" => "Stars number: " . $repository["stargazers_count"] . "\n",
-            "description" => "Repository description : " . $repository["description"] . "\n",
-            "language" => "Programming Language : " . $repository["language"] . "\n"
+        $responses[] = [
+            "repo" => "Repository name: " . ($repository["name"] ?? "Not Available") . "\n",
+            "author" => "Author : " . ($repository["owner"]["login"] ?? "Not Available") . "\n",
+            "stars" => "Stars number: " . ($repository["stargazers_count"] ?? "Not Available") . "\n",
+            "description" => "Repository description : " . ($repository["description"] ?? "Not Available") . "\n",
+            "language" => "Programming Language : " . ($repository["language"] ?? "Not Available") . "\n"
         ];
 
-        $i++;
     }
 
-    echo "\nThe resultas are : \n\n";
+
+
+    echo "\nThe results are : \n\n";
     
     foreach($responses as $response){
         echo $response["repo"];
